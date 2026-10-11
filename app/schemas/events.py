@@ -1,6 +1,5 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, AwareDatetime
 from enum import Enum
-from datetime import datetime
 
 
 class StatusType(str, Enum):
@@ -13,7 +12,6 @@ class EventType(str, Enum):
     LISTING_CREATED = "listing.created"
     LISTING_UPDATED = "listing.updated"
     LISTING_STATUS_CHANGED = "listing.status_changed"
-    LEAD_CREATED = "lead.created"
 
 class EventPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -25,9 +23,9 @@ class EventPayload(BaseModel):
 
 class EventRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    event_id: str |None = None
+    event_id: str
     event_type: EventType = Field(description="The type of the event")
-    occurred_at: datetime
+    occurred_at: AwareDatetime
     source: str = Field(min_length = 1, description="The source of the event")
     payload: EventPayload
 
